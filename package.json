@@ -1,0 +1,16 @@
+{
+  "name": "lumina-lms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumina — Learning Management System with live classes (MERN, WebRTC, FFmpeg, BullMQ, CloudFront, Redux Toolkit)",
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "seed": "npm run seed --prefix server",
+    "test": "npm run test --prefix server",
+    "worker": "npm run worker --prefix server",
+    "postinstall": "npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  }
+}
