@@ -1,0 +1,81 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  EDITOR
+  COMMENTER
+  VIEWER
+}
+
+enum Permission {
+  VIEW
+  COMMENT
+  EDIT
+}
+
+model User {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  memberships  Membership[]
+  comments     Comment[]
+  createdAt    DateTime     @default(now())
+}
+
+model Workspace {
+  id          String       @id @default(cuid())
+  name        String
+  memberships Membership[]
+  documents   Document[]
+  createdAt   DateTime     @default(now())
+}
+
+model Membership {
+  id          String    @id @default(cuid())
+  userId      String
+  workspaceId String
+  role        Role      @default(EDITOR)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model Document {
+  id          String      @id @default(cuid())
+  title       String      @default("Untitled page")
+  workspaceId String
+  workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  snapshots   Snapshot[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  body       String
+  documentId String
+  authorId   String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model Snapshot {
+  id         String   @id @default(cuid())
+  label      String?
+  content    Json
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}

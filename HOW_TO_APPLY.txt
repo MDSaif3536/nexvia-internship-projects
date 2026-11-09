@@ -1,0 +1,21 @@
+CollabSpace source patch
+=======================
+
+This patch contains only source files to add or replace in your EXISTING project.
+It does not include .env, node_modules, .next, or any database files.
+
+Apply:
+1. Stop the current development server in VS Code terminal with Ctrl+C.
+2. Extract this ZIP directly into your existing collab-workspace-mvp project folder.
+3. If Windows asks, choose to overwrite/replace the listed source files.
+4. Start the app again with: npm run dev
+
+No npm install, Prisma migration, database reset, or account recreation is required.
+
+Team member management currently adds an already-registered CollabSpace user by
+email. It does not send an email invitation. The workspace owner can set roles
+and remove members from the Manage team UI.
+
+After a role change or member removal, the WebSocket server rechecks membership
+and write access on a short interval. Refresh a member's document tab to update
+its visible editing controls immediately.
